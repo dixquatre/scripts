@@ -1,0 +1,12 @@
+#!/bin/sh
+
+SCRIPT_DIR="$HOME/bin"
+SCRIPT_FILE="$SCRIPT_DIR/$1"
+
+if [ ! -f "$SCRIPT_FILE" ] ; then
+    echo '#!/bin/sh\n' > "$SCRIPT_FILE"
+    chmod +x "$SCRIPT_FILE"
+    vim "+normal Go" "$SCRIPT_FILE"
+else
+    vim "$SCRIPT_FILE"
+fi
