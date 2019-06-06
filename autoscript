@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SCRIPT_DIR="$HOME/bin"
+SCRIPT_DIR="$HOME/.local/bin"
 SCRIPT_FILE="$SCRIPT_DIR/$1"
 
 if [ ! -f "$SCRIPT_FILE" ] ; then
