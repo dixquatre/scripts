@@ -5,6 +5,7 @@ dotfiles="/home/matt/.config/dotfiles/suckless"
 project=$(basename $(pwd))
 diffdir="${dotfiles}/${project}_diffs/"
 olddiffdir="${dotfiles}/${project}_diffs/old/"
+olddiffdir="${diffdir}old/"
 rm -rf "$olddiffdir" &&
 mkdir -p "$olddiffdir" &&
 mkdir -p "$diffdir" &&
