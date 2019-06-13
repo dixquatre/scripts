@@ -31,6 +31,19 @@ getWeather() {
 	echo -ne "${condition} ${temperature}"
 }
 
+getBattery() {
+	for x in /sys/class/power_supply/BAT?/capacity;
+	do
+	case "$(cat $x)" in
+		100|9[0-9]) echo -ne "" ;;
+		8[0-9]|7[0-9]) echo -ne "" ;;
+		6[0-9]|5[0-9]) echo -ne "" ;;
+		4[0-9]|3[0-9]) echo -ne "" ;;
+		*) echo "" ;;
+	esac
+	done
+}
+
 getTime() {
 	echo -ne " $(date "+%Y-%m-%d %R")"
 }
@@ -42,6 +55,7 @@ getNetwork() {
 }
 
 while true; do
-	xsetroot -name "$(setBluebg)$(getWeather) | $(getNetwork) | $(getTime)"
+	xsetroot -name "$(setBluebg)$(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
 	sleep 1m
 done
+
