@@ -1,0 +1,47 @@
+#!/bin/bash
+
+setBluebg() {
+	echo -ne "\x0f"
+}
+
+getWeather() {
+	infoweather=$(curl -s 'wttr.in/Fredericton?format=%C:%t&period=60')
+	IFS=':' read -r condition temperature <<<"$infoweather"
+	case ${condition} in
+		"Sunny") condition="" ;;
+               "Cloudy") condition="" ;;
+                  "Fog") condition="" ;;
+            "HeavyRain") condition="" ;;
+         "HeavyShowers") condition="" ;;
+            "HeavySnow") condition="" ;;
+     "HeavySnowShowers") condition="" ;;
+            "LightRain") condition="" ;;
+         "LightShowers") condition="" ;;
+           "LightSleet") condition="" ;;
+    "LightSleetShowers") condition="" ;;
+            "LightSnow") condition="" ;;
+     "LightSnowShowers") condition="" ;;
+         "PartlyCloudy") condition="" ;;
+    "ThunderyHeavyRain") condition="" ;;
+      "ThunderyShowers") condition="" ;;
+  "ThunderySnowShowers") condition="" ;;
+	   "VeryCloudy") condition="" ;;
+		      *) condition="" ;;
+        esac
+	echo -ne "${condition} ${temperature}"
+}
+
+getTime() {
+	echo -ne " $(date "+%Y-%m-%d %R")"
+}
+
+getNetwork() {
+	wireless=$(grep "^s*w" /proc/net/wireless | awk '{ print " ", int($3 * 100 / 70) "%" }')
+	nettype=$(sed "s/down//;s/up//" /sys/class/net/e*/operstate)
+	echo -ne "${nettype}${wireless}"
+}
+
+while true; do
+	xsetroot -name "$(setBluebg)$(getWeather) | $(getNetwork) | $(getTime)"
+	sleep 1m
+done
