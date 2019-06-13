@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if ! pgrep -x "$1" > /dev/null
+then
+	exec "$1"
+fi
+

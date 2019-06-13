@@ -4,8 +4,12 @@
 normal="\x01"
 red="\x05"
 yellow="\x06"
-green="\x07"
-blue="\x0A"
+green="\x08"
+blue="\x07"
+rebbg="\x0c"
+yellowbg="\x0d"
+greenbg="\x0e"
+bluebg="\x0f"
 
 getBattery() {
 	perc=$(acpi -b | awk '/Battery/ {print $4}' | cut -d% -f1)
@@ -16,11 +20,11 @@ getBattery() {
 		if [ ${perc} -eq "100" ]; then
 			echo -ne ""
 		elif [ ${perc} -le "100" ]; then
-			echo -ne "${normal}BAT: ${perc}"
+			echo -ne "${normal}BAT: ${green}${perc}"
 		elif [ ${perc} -le "50" ]; then
-			echo -ne "${normal}BAT: ${perc}"
+			echo -ne "${normal}BAT: ${yellow}${perc}"
 		elif [ ${perc} -le "25" ]; then
-			echo -ne "${normal}BAT: ${perc}${time}"
+			echo -ne "${normal}BAT: ${red}${perc}${time}"
 		fi
 	fi
 }
@@ -28,11 +32,11 @@ getBattery() {
 getCPU() {
 	cpu=$(mpstat -P ALL 1 1 | awk '/Average:/ && $2 ~ /all/ {print $3}')
 	if [ $(bc <<< "${cpu}<25") == 1 ]; then
-		echo -ne "-normal"
+		echo -ne "${green}"
 	elif [ $(bc <<< "${cpu}<75") == 1 ]; then
-		echo -ne "-medium"
+		echo -ne "${yellow}"
 	else
-		echo -ne "$-heaby"
+		echo -ne "${red}$"
 	fi
 }
 
@@ -44,11 +48,11 @@ getMEM() {
 		mem="$(bc <<< ${total}-$(free -m | awk '/Mem:/ {print $7}'))"
 	fi
 	if [ $(bc <<< "${mem}<$(echo ${total}* .25 | bc)") == 1 ]; then
-		echo -ne "-good"
+		echo -ne "${green}"
 	elif [ $(bc <<< "${mem}<$(echo ${total}* .5 | bc)") == 1 ]; then
-		echo -ne "-medium"
+		echo -ne "${yellow}"
 	else
-		echo -ne "-heavy"
+		echo -ne "${red}"
 	fi
 }
 
@@ -57,15 +61,17 @@ getUpdates() {
 	if [ "$(checkupdates | wc -l)" -le 0 ]; then
 		upd=""
 	else
-		upd="${red} ${normal}${upd} "
+		upd="${red} ${upd} "
 	fi
 }
 
 getSound() {
 	is_muted=$(amixer get Master | awk '/%/ {gsub(/[\[\[]/,""); print $6}' | tail -1)
 	cur_device=$(pactl list sinks | awk '/Active Port:/ {print substr($3,15)}' | grep -v "^$")
-	if [ ${cur_device} == "headphone" ]; then
+	if [ ${cur_device} == "headphones" ]; then
 		out_device=("  " "  ")
+	elif [ ${cur_device} == "lineout" ]; then
+		out_device=(" L " " L ")
 	else
 		out_device=(" 蓼 " " 蓼 ")
 	fi
@@ -79,9 +85,10 @@ getSound() {
 
 getTime() {
 	tme="$(date '+%Y-%m-%d %R')"
-	echo -ne "${tme}"
+	echo -ne "${bluebg}${tme}"
 }
 
 while true; do
-	xsetroot -name "$(getBattery) $(getSound) $(getCPU) $(getMEM) $(getTime)"
+	#xsetroot -name "$(getBattery) $(getSound) $(getCPU) $(getMEM) $(getTime)"
+	xsetroot -name "$(getCPU) $(getMEM) $(getTime)"
 done

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+temp(){
+	tmp="$(awk '/^CPU:/ {print +$2}' <(sensors))"
+	mb="${tmp#* }"
+	if (( mb < 70 )); then
+		printf "%b" "MB: $mb°"
+	else
+		printf "%b" "MB:: $mb°"
+	fi
+}
+
+cpu(){
+	read cpu a b c previdle rest < /proc/stat
+	prevtotal=$((a+b+c+previdle))
+	printf "\n%b %b %b %b\n" "$a $b $c $previdle"
+	sleep 0.5
+	read cpu a b c idle rest < /proc/stat
+	printf "%b %b %b %b\n" "$a $b $c $idle"
+	total=$((a+b+c+idle))
+	cpu="$((100*( (total-prevtotal) - (idle-previdle) ) / (total - prevtotal) ))"
+	printf "%b" "CPU $cpu"
+}
+echo "$(temp) - $(cpu)"
