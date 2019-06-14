@@ -3,6 +3,9 @@
 setBluebg() {
 	echo -ne "\x0f"
 }
+WLAN() {
+	echo -ne "$(nmcli device wifi list | sed -rn '1d; /^[*]/ s/ {2,}/;/gp' | awk -F';' 'END{if (NR) {sub(/-.*$/, "", $2); print $2, $7;} else print "-" }')"
+}
 
 getWeather() {
 	infoweather=$(curl -s 'wttr.in/Fredericton?format=%C:%t&period=60')
@@ -56,7 +59,7 @@ getNetwork() {
 }
 
 while true; do
-	xsetroot -name "$(setBluebg)$(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
+	xsetroot -name "$(WLAN) | $(setBluebg)$(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
 	sleep 1m
 done
 
