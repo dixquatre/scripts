@@ -21,6 +21,7 @@ getWeather() {
     "LightSleetShowers") condition="" ;;
             "LightSnow") condition="" ;;
      "LightSnowShowers") condition="" ;;
+             "Overcast") condition="" ;;
          "PartlyCloudy") condition="" ;;
     "ThunderyHeavyRain") condition="" ;;
       "ThunderyShowers") condition="" ;;

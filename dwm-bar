@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -euo pipefail
+
+#vpn_status () {
+#	vpnc_pid="$(pgrep pppd)"
+#	[ "$vpnc_pid" ] && echo up || echo down
+#}
+
+#DBOX="$(dropbox status | head -n1 | cut -b1-3)"
+#if [[ "${DBOX}" == 'Dro' ]]; then
+#	DBOX="-"
+#else
+#	DBOX="${DBOX}."
+#fi
+
+WLAN="$(nmcli device wifi list | sed -rn '1d; /^[*]/ s/ {2,}/;/gp' | awk -F';' 'END{if (NR) {sub(/-.*$/, "", $2); print $2, $7;} else print "-" }')"
+#VPN="${vpn_status}"
+VOL="$(pactl list sinks | perl -ne 'local $/; my $stdin = <>; print "$1" if ($stdin =~ /N[ao]me:\h+alsa_output.pci.*analog(?:.(?!\n\n))*?Mut[eo]:\h+(?:off|no).*?Volume:.*?(\d+%)/s)')"
+[[ ! $VOL ]] && VOL='off'
+DATE="$(date '+%Y-%m-%d %R')"
+LOAD=$(echo "$(cut -d' ' -f1 /proc/loadavg)*100" | bc | sed 's/\.[0-9]*//')
+FREE_DATA=$(free -m | grep Mem | tr -s ' ')
+CURRENT=$(echo "${FREE_DATA}" | cut -f3 -d' ')
+TOTAL=$(echo "${FREE_DATA}" | cut -f2 -d' ')
+MEM="$(echo "scale=2; ${CURRENT}/${TOTAL}*100 | bc | cut -f1 -d'.')"
+CPU="$(ps -A -o pcpu | tail -n+2 | paste -sd+ | bc)"
+HDD="$(df -lh | awk '{if ($6 == "/") {print $5 }}')"
+PLAYER=$(dwmp --bar)
+if [[ $PLAYER == mpd ]]; then PROGRESS="$(mpc status | grep -oP '\d+:\d+/\d+:\d+')"; PLAYER="${PLAYER} ${PROGRESS}"; fi
+# COMBINE DATA
+HEAD="WL: $WLAN"
+#[[ $VPN == up ]] && HEAD="$HEAD | VPN: $VPN"
+HEAD="$HEAD | CPU: ${CPU}% | MEM: ${MEM}% | LOAD: ${LOAD}% | HDD: $HDD"
+TAIL="VOL: $VOL | PL: $PLAYER | $DATE"
+if acpi -a | grep off-line >/dev/null; then
+	BAT=$(acpi -b | cut -d' ' -f4 | tr -d '%,')"
+	xsetroot -name "${HEAD} | BAT: ${BAT}% | ${TAIL}"
+	if [[ $BAT -le 10 ]]; then
+		xsetroot -name "LOW BATTERY! ${BAT}%"
+	elif [[ $BAT -le 3 ]]; then
+		systemctl suspend
+	fi
+else
+	xsetroot -name "${HEAD} | ${TAIL}"
+fi
+
