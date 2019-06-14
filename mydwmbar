@@ -56,7 +56,7 @@ getNetwork() {
 }
 
 while true; do
-	xsetroot -name "$(setBluebg)$(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
+	xsetroot -name "$(setBluebg) $(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
 	sleep 1m
 done
 
