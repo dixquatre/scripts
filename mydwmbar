@@ -9,6 +9,7 @@ getWeather() {
 	IFS=':' read -r condition temperature <<<"$infoweather"
 	case ${condition} in
 		"Sunny") condition="" ;;
+		"Clear") condition="" ;;
                "Cloudy") condition="" ;;
                   "Fog") condition="" ;;
             "HeavyRain") condition="" ;;
@@ -27,7 +28,7 @@ getWeather() {
       "ThunderyShowers") condition="" ;;
   "ThunderySnowShowers") condition="" ;;
 	   "VeryCloudy") condition="" ;;
-		      *) condition="" ;;
+		      *) condition=" ${condition}" ;;
         esac
 	echo -ne "${condition} ${temperature}"
 }
@@ -55,8 +56,45 @@ getNetwork() {
 	echo -ne "${nettype}${wireless}"
 }
 
+getPlayer() {
+	if info=$(cmus-remote -Q 2> /dev/null); then
+		status=$(echo "$info" | grep -v "set " | grep -v "tag " | grep "status " | cut -d ' ' -f2)
+		if [ "$status" = "playing" ] || [ "$status" = "pause" ] || [ "$status" = "stopped" ];
+			title=$(echo "$info" | grep -v "set " | grep " title " | cut -d ' ' -f3-)
+			artist=$(echo "$info" | grep -v "set " | grep " artist " | cut -d ' ' -f3-)
+			position=$(echo "$info" | grep -v "set " | grep -v "tag " | grep "position " | cut -d ' ' -f2)
+			duration=$(echo "$info" | grep -v "set " | grep -v "tag " | grep "duration " | cut -d ' ' -f2)
+			if [ "$duration" -ge 0 ]; then
+				pos_minutes=$(printf "%02d" $((position / 60)))
+				pos_seconds=$(printf "%02d" $((position % 60)))
+				dur_minutes=$(printf "%02d" $((duration / 60)))
+				dur_seconds=$(printf "%02d" $((duration % 60)))
+				info_string="| $pos_minutes:$pos_seconds / $dur_minutes:$dur_seconds"
+			fi
+			info_string="$artist - $title $info_string"
+
+			if [ "$status" = "playing" ]; then
+				echo "#1 $info_string"
+			elif [ "$status" = "pause" ]; then
+				echo "#2 $info_string"
+			elif [ "$status" = "stopped" ]; then
+				echo "#3 $info_string"
+			else
+				echo ""
+			fi
+		else
+			echo ""
+		fi
+	else
+		echo ""
+	fi
+}
+
+
+}
+
 while true; do
-	xsetroot -name "$(setBluebg) $(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
+	xsetroot -name "$(setBluebg) $getPlayer | $(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
 	sleep 1m
 done
 
