@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sep=" " #""
+
 setBluebg() {
 	echo -ne "\x0f"
 }
@@ -15,7 +17,7 @@ getWeather() {
          "HeavyShowers") condition="" ;;
             "HeavySnow") condition="" ;;
      "HeavySnowShowers") condition="" ;;
-            "LightRain") condition="" ;;
+           "Light Rain") condition="" ;;
          "LightShowers") condition="" ;;
            "LightSleet") condition="" ;;
     "LightSleetShowers") condition="" ;;
@@ -27,7 +29,7 @@ getWeather() {
       "ThunderyShowers") condition="" ;;
   "ThunderySnowShowers") condition="" ;;
 	   "VeryCloudy") condition="" ;;
-		      *) condition="" ;;
+		      *) condition="${condition}" ;;
         esac
 	echo -ne "${condition} ${temperature}"
 }
@@ -50,13 +52,13 @@ getTime() {
 }
 
 getNetwork() {
-	wireless=$(grep "^s*w" /proc/net/wireless | awk '{ print " ", int($3 * 100 / 70) "%" }')
+	wireless=$(grep "^s*w" /proc/net/wireless | awk '{ print "", int($3 * 100 / 70) "%" }')
 	nettype=$(sed "s/down//;s/up//" /sys/class/net/e*/operstate)
 	echo -ne "${nettype}${wireless}"
 }
 
 while true; do
-	xsetroot -name "$(setBluebg) $(getWeather) | $(getNetwork) | $(getBattery) | $(getTime)"
+	xsetroot -name "$(setBluebg) $(getWeather)${sep}$(getNetwork)${sep}$(getBattery)${sep}$(getTime)"
 	sleep 1m
 done
 
