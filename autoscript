@@ -3,10 +3,16 @@
 SCRIPT_DIR="$HOME/.local/bin"
 SCRIPT_FILE="$SCRIPT_DIR/$1"
 
-if [ ! -f "$SCRIPT_FILE" ] ; then
-    echo '#!/bin/sh\n' > "$SCRIPT_FILE"
-    chmod +x "$SCRIPT_FILE"
-    vim "+normal Go" "$SCRIPT_FILE"
+if [ -n "$DISPLAY" ]; then
+	EDIT="$TERMINAL -t $EDITOR -e $EDITOR"
 else
-    vim "$SCRIPT_FILE"
+	EDIT="$EDITOR"
+fi
+
+if [ ! -f "$SCRIPT_FILE" ] ; then
+    echo '#!/bin/sh' > "$SCRIPT_FILE"
+    chmod +x "$SCRIPT_FILE"
+    $EDIT "+normal Go" "$SCRIPT_FILE"
+else
+    $EDIT "$SCRIPT_FILE"
 fi

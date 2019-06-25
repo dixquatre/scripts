@@ -1,6 +1,0 @@
-#!/bin/bash
-
-kill $(ps -ef | awk -v this="$0" -v search="dwmbar" '{
-  if($NF~search && $0!~this){print $2}
-  }')
-dwmbar &
