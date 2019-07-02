@@ -1,0 +1,2 @@
+#!/bin/sh
+ifconfig -a | grep 'wl' | sed 's/Link//' | awk '{print $1}' | head -n 1 | tr -d :

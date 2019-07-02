@@ -1,0 +1,62 @@
+#!/bin/sh
+
+dat() {
+	date +"%R"
+}
+
+battery() {
+	capacity=$(cat /sys/class/power_supply/BAT*/capacity)
+	status=$(cat /sys/class/power_supply/BAT*/status)
+
+	if [ "$status" = "Charging" ]; then
+		bat_icon="char"
+	else
+		bat_icon="bat"
+	fi
+
+	echo "$bat_icon $capacity%"
+}
+
+memory() {
+	free -h | awk '/^Mem:/ {print $3 "/" $2}'
+}
+
+volume() {
+	percent=$(pactl list sinks | awk 'NR==10{print $5}')
+	mute=$(pactl list sinks | awk '/Mute:/ {print $2}')
+	if [ "$mute" = "yes" ]; then
+		echo "Mute"
+	else
+		echo "$percent"
+	fi
+}
+
+brightness() {
+	echo "$(xbacklight -get)%"
+}
+
+wireless() {
+	status=$(cat /sys/class/net/wlp2s0/operstate)
+	ssid=$(nmcli -t -f active,ssid dev wifi | grep -E '^yes' | cut -d: -f2)
+	signal=$(awk 'NR==3{print $3}' /proc/net/wireless | sed -e 's/\.//g')
+	if [ "$status" = "down" ]; then
+		echo "down"
+	else
+		if [ "$signal" -gt "66" ]; then
+			quality="good"
+		else
+			if [ "$signal" -le "33" ]; then
+				quality="bad"
+			else
+				quality="okay"
+			fi
+		fi
+	fi
+	echo "$ssid [$quality]"
+}
+
+while true; do
+	echo " $(brightness)  |  $(volume)  |  $(memory)  |  $(wireless)  |  $(battery)  |  $(dat)  "
+	sleep 1
+done
+

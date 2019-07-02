@@ -18,7 +18,7 @@ getWeather() {
          "HeavyShowers") condition="" ;;
             "HeavySnow") condition="" ;;
      "HeavySnowShowers") condition="" ;;
-           "Light Rain") condition="" ;;
+           "Light rain") condition="" ;;
          "LightShowers") condition="" ;;
            "LightSleet") condition="" ;;
     "LightSleetShowers") condition="" ;;
