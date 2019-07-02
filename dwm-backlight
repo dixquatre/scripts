@@ -1,0 +1,29 @@
+#!/bin/sh
+
+incr=5%
+cur=$(xbacklight -get)
+case "$1" in
+	"up")
+		if [ "$cur" -eq 0 ]; then
+			xbacklight -set 1
+			echo "$cur"
+		else
+			xbacklight -inc $incr
+			echo "$cur"
+		fi
+		;;
+	"down")
+		if [ "$cur" -le 5 ]; then
+			xbacklight -set 1
+			echo "$cur"
+		else
+			xbacklight -dec $incr
+			echo "$cur"
+		fi
+		;;
+	*)
+		echo "Unsupported: \"$1\""
+		exit 1
+esac
+xbacklight -get
+
