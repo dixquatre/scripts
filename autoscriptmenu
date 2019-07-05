@@ -1,5 +1,6 @@
 #!/bin/bash
 
-selected=$(ls "$HOME/.local/bin" | dmenu -l 20 -h 26 -fn "Ubuntu Mono:style=Regular:size=12" -p "autoscript: ")
+#selected=$(ls "$HOME/.local/bin" | dmenu -l 20 -h 26 -fn "Ubuntu Mono:style=Regular:size=12" -p "autoscript: ")
+selected=$(ls "$HOME/.local/bin" | rofi -dmenu -p "autoscript")
 [[ -z "$selected" ]] && exit
 autoscript "$selected"
