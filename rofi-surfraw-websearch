@@ -4,4 +4,4 @@
 # set your browser (uncomment if needed, some GUI does not detect browser variable)
 # BROWSER=firefox
 
-surfraw -browser=$BROWSER $(sr -elvi | awk -F'-' '{print $1}' | sed '/:/d' | awk '{$1=$1};1' | rofi -kb-row-select "Tab" -kb-row-tab "Control+space" -dmenu -msg ">>> Tab = Autocomplete" -i -p "websearch: ")
+surfraw -browser=$BROWSER $(sr -elvi | awk -F'-' '{print $1}' | sed '/:/d' | awk '{$1=$1};1' | rofi -kb-row-select "Tab" -kb-row-tab "Control+space" -dmenu -msg ">>> Tab = Autocomplete" -i -p "websearch")
