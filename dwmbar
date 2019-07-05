@@ -10,11 +10,10 @@ getWeather() {
 	infoweather=$(curl -s 'wttr.in/Fredericton?format=%C:%t&period=60')
 	IFS=':' read -r condition temperature <<<"$infoweather"
 	case ${condition} in
-		"Sunny") condition="" ;;
-		"Clear") condition="" ;;
+      "Clear" | "Sunny") condition="" ;;
                "Cloudy") condition="" ;;
-                  "Fog") condition="" ;;
-            "HeavyRain") condition="" ;;
+         "Mist" | "Fog") condition="" ;;
+           "Heavy rain") condition="" ;;
          "HeavyShowers") condition="" ;;
             "HeavySnow") condition="" ;;
      "HeavySnowShowers") condition="" ;;
