@@ -1,0 +1,6 @@
+#!/bin/sh
+
+SCRIPT_DIR="$HOME/.local/bin"
+SCRIPT_FILE="$SCRIPT_DIR/$1"
+
+rm -f "$SCRIPT_FILE"

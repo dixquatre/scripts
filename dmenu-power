@@ -1,0 +1,10 @@
+#!/bin/sh
+#https://gitlab.com/impascal/conf-dotfiles/blob/master/scripts/power-dmenu
+
+choice=$(printf "1:Shutdown\n2:Reboot\n3:Quit window manager" | dmenu -l 4 -p "What do you want to do?")
+
+case "$choice" in
+              "1:Shutdown") shutdown now ;;
+                "2:Reboot") reboot ;;
+   "3:Quit window manager") pkill X ;;
+esac

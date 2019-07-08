@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# https://gitlab.com/impascal/conf-dotfiles/blob/master/scripts/dmenu-browse
+
+if [ -n "$OPEN" ]; then
+	open_command=$OPEN
+elif [ "$(uanem)" = "Darwin" ]; then
+	open_command='open'
+else
+	open_command='xdg-open'
+fi
+
+if [ -z "$1" ]; then
+	dir=$HOME
+elif [ -f "$1" ]; then
+	exit 1
+else
+	dir=$(realpath "$1")
+fi
+
+while true; do
+	sel="$(ls -l "$dir" | grep -v '^\.$' | dmenu -p "$dir" -l 25)"
+	[ "$?" -ne 0 ] && exit
+	target="$dir/$sel"
+	[ -f "$target" ] && $open_command "$target" && exit
+	[ -d "$target" ] && dir=$(realpath "$target")
+done
+

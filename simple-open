@@ -1,0 +1,24 @@
+#!/bin/bash
+#https://gitlab.com/impascal/conf-dotfiles/blob/master/scripts/simple-open
+# I use this instead of xdg-open. It works with environmental variables.
+# You have only to export variables with the name of the program in your
+# .profile file.
+help_me() {
+	printf "Usage: simple-open [OPTION] [FILE]"
+	printf "\n--help    show this help"
+	exit
+}
+
+[ -z "$1" ] && exit
+[ "$1" = "--help" ] && help_me
+file=$(realpath "$1")
+
+case $file in
+	*.pdf) "$PDFREADER" "$file" & ;;
+	*.doc|*.docx|*.odt) "$DOCOPENER" "$file" & ;;
+	*.ppt|*.pptx) "$PPTOPENER" "$file" & ;;
+	*.jpg|*.png) "$IMGVIEWER" "$file" & ;;
+	*.mp4|*.avi|*.mkv) "$VIDPLAYER" "$file" & ;;
+	*.html) "$BROWSER" "$file" & ;;
+esac
+

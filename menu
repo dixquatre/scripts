@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# dmenu launcher
+
+[ $# -eq 0 ] && exit 1
+
+#colors ="-nb #282828 -nf #ebdbb2 -sb #458588-sf #ebdbb2"
+
+if [ "$1" = "run" ] ; then
+	shift
+	_run=_run
+fi
+
+res=$(xrandr --nograb --current | awk '/\*/ {print $1}' | tail -n 1)
+res=${res% *}
+sw=${res%x*}
+sh=${res#*x}
+sw=${sw%.*}
+sh=${sh%.*}
+
+w=$(echo "$sw / 1.75" | bc)
+x=$((sw / 2 - w / 2))
+y=$((sh / 5))
+h=$((sh / 50))
+
+dmenu${_run} -f -l "$h" -nb "#282828" -nf "#ebdbb2" -sb "#458588" -sf "#ebdbb2" "$@"
