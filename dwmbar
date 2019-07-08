@@ -1,9 +1,9 @@
 #!/bin/bash
 
-sep=" " #""
+sep=" " #"  " #"  "
 
 setBluebg() {
-	echo -ne "\x0f"
+	echo -ne "\x0e"
 }
 
 getWeather() {
@@ -49,6 +49,7 @@ getBattery() {
 
 getTime() {
 	echo -ne " $(date "+%Y-%m-%d %R")"
+
 }
 
 getNetwork() {
@@ -97,7 +98,7 @@ getPlayer() {
 }
 
 while true; do
-	xsetroot -name "$(setBluebg) $(getPlayer)${sep}$(getWeather)${sep}$(getNetwork)${sep}$(getBattery)${sep}$(getTime)"
+	xsetroot -name "$(getPlayer)${sep}$(getWeather)${sep}$(getNetwork)${sep}$(getBattery)${sep}$(getTime)"
 	sleep 1m
 done
 
