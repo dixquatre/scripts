@@ -12,7 +12,7 @@ declare -A COMMANDS
 # List of defined 'bangs'
 
 # launch programs
-COMMANDS["apps"]="rofi -combi-modi window,drun -show combi"
+COMMANDS["apps"]="rofi -modi combi -combi-modi window,drun -show combi"
 LABELS["apps"]=""
 
 # open bookmarks
