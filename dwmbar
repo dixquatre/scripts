@@ -13,11 +13,11 @@ getWeather() {
       "Clear" | "Sunny") condition="" ;;
                "Cloudy") condition="" ;;
          "Mist" | "Fog") condition="" ;;
-           "Heavy rain") condition="" ;;
+           "Heavy Rain") condition="" ;;
          "HeavyShowers") condition="" ;;
             "HeavySnow") condition="" ;;
      "HeavySnowShowers") condition="" ;;
-           "Light rain") condition="" ;;
+  "Rain" | "Light Rain") condition="" ;;
          "LightShowers") condition="" ;;
            "LightSleet") condition="" ;;
     "LightSleetShowers") condition="" ;;

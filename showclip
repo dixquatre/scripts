@@ -6,5 +6,5 @@
 clip=$(xclip -o -selection clipboard)
 prim=$(xclip -o -selection primary)
 
-[ -n "$clip" ] && dunstify "Clipboard:" "$clip"
-[ -n "$prim" ] && dunstify "Primary:" "$prim"
+[ -n "$clip" ] && notify-send "Clipboard:" "$clip" || notify-send "Empty Clipboard"
+[ -n "$prim" ] && notify-send "Primary:" "$prim"   || notify-send "Empty Primary"

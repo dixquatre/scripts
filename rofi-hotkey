@@ -1,0 +1,5 @@
+#!/bin/bash
+
+config="$HOME/.config/sxhkd/sxhkdrc"
+
+awk '/^[a-z]/ && last {print $0,"\t",last} {last=""} /^#/{last=$0}' "$config" | column -t -s $'\t' | rofi -dmenu -columns 2 -width 90 -p test
